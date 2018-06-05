@@ -22,14 +22,7 @@ namespace SoftServerless
             RatingDto ratingDocs,
             TraceWriter log)
         {
-            return new JsonResult(ratingDocs, new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver()
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                },
-                Formatting = Formatting.Indented,
-            });
+            return new JsonResult(ratingDocs);
         }
     }
 }

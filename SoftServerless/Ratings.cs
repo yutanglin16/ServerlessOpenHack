@@ -43,15 +43,8 @@ namespace SoftServerless
             var updatedData = StoreRating(data);
             
             await docs.AddAsync(updatedData);
-            
-            return new JsonResult(updatedData, new JsonSerializerSettings
-            {   
-                ContractResolver = new DefaultContractResolver()
-                {
-                    NamingStrategy = new CamelCaseNamingStrategy()
-                },
-                Formatting = Formatting.Indented,
-            });
+
+            return new JsonResult(updatedData);
         }
 
         private static RatingDto StoreRating(RatingDto data)
