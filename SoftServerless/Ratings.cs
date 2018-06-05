@@ -18,12 +18,13 @@ namespace SoftServerless
     {
         private static HttpClient httpClient = new HttpClient();
 
+
         [FunctionName("CreateRating")]
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, 
             [CosmosDB(
-                databaseName: "TablesDB",
-                collectionName: "Ratings",
+                databaseName: "SoftServerless",
+                collectionName: "RatingDb",
                 ConnectionStringSetting = "RatingsDb")] IAsyncCollector<RatingDto> docs,
             TraceWriter log)
         {
@@ -44,7 +45,7 @@ namespace SoftServerless
             await docs.AddAsync(updatedData);
             
             return new JsonResult(updatedData, new JsonSerializerSettings
-            {
+            {   
                 ContractResolver = new DefaultContractResolver()
                 {
                     NamingStrategy = new CamelCaseNamingStrategy()
