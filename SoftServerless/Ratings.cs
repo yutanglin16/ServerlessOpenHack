@@ -7,21 +7,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 
 namespace SoftServerless
 {
     public static class Ratings
     {
+        private static HttpClient httpClient = new HttpClient();
+
         [FunctionName("CreateRating")]
-        public static IActionResult Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
             
             string requestBody = new StreamReader(req.Body).ReadToEnd();
             var data = JsonConvert.DeserializeObject<RatingDto>(requestBody);
 
-            if (!Validate(data))
+
+            var isValid = await Validate(data);
+            if (!isValid)
             {
                 return new BadRequestObjectResult("Request not valid");
             }
@@ -46,8 +52,13 @@ namespace SoftServerless
             return data;
         }
 
-        private static bool Validate(RatingDto data)
+        private static async Task<bool> Validate(RatingDto data)
         {
+            var response = await httpClient.GetAsync($"https://serverlessohlondonproduct.azurewebsites.net/api/GetProduct?productId={data.Id}");
+            if (!response.IsSuccessStatusCode)
+            {
+                return false;
+            }
             return true;
         }
     }
