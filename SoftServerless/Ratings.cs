@@ -1,5 +1,6 @@
 
 using System.IO;
+using System.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -21,8 +22,9 @@ namespace SoftServerless
         public static async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, 
             [CosmosDB(
-                databaseName: "",
-                collectionName: "")] IAsyncCollector<RatingDto> docs,
+                databaseName: "TablesDB",
+                collectionName: "Ratings",
+                ConnectionStringSetting = "RatingsDb")] IAsyncCollector<RatingDto> docs,
             TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
@@ -38,6 +40,7 @@ namespace SoftServerless
             }
 
             var updatedData = StoreRating(data);
+            
             await docs.AddAsync(updatedData);
             
             return new JsonResult(updatedData, new JsonSerializerSettings

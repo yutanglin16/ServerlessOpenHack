@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SoftServerless
 {
-    class RatingDto
+    public class RatingDto
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
