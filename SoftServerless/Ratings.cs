@@ -54,7 +54,15 @@ namespace SoftServerless
 
         private static async Task<bool> Validate(RatingDto data)
         {
-            var response = await httpClient.GetAsync($"https://serverlessohlondonproduct.azurewebsites.net/api/GetProduct?productId={data.Id}");
+            string getProductUri = $"https://serverlessohlondonproduct.azurewebsites.net/api/GetProduct?productId={data.ProductId}";
+            string getUserUri = $"https://serverlessohlondonuser.azurewebsites.net/api/GetUser?userId={data.UserId}";
+            return await ValidateUri(getProductUri) && await ValidateUri(getUserUri);
+
+        }
+
+        private static async Task<bool> ValidateUri(string requestUri)
+        {
+            var response = await httpClient.GetAsync(requestUri);
             if (!response.IsSuccessStatusCode)
             {
                 return false;
