@@ -18,7 +18,12 @@ namespace SoftServerless
         private static HttpClient httpClient = new HttpClient();
 
         [FunctionName("CreateRating")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, TraceWriter log)
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)]HttpRequest req, 
+            [CosmosDB(
+                databaseName: "",
+                collectionName: "")] IAsyncCollector<RatingDto> docs,
+            TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
             
@@ -33,7 +38,7 @@ namespace SoftServerless
             }
 
             var updatedData = StoreRating(data);
-
+            await docs.AddAsync(updatedData);
             
             return new JsonResult(updatedData, new JsonSerializerSettings
             {
