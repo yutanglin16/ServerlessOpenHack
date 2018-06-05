@@ -26,10 +26,10 @@ namespace SoftServerless
                 return new BadRequestObjectResult("Request not valid");
             }
 
-            data.Id = Guid.NewGuid();
-            data.Timestamp = DateTime.UtcNow;
+            var updatedData = StoreRating(data);
 
-            return new JsonResult(data, new JsonSerializerSettings
+            
+            return new JsonResult(updatedData, new JsonSerializerSettings
             {
                 ContractResolver = new DefaultContractResolver()
                 {
@@ -37,6 +37,13 @@ namespace SoftServerless
                 },
                 Formatting = Formatting.Indented,
             });
+        }
+
+        private static RatingDto StoreRating(RatingDto data)
+        {
+            data.Id = Guid.NewGuid();
+            data.Timestamp = DateTime.UtcNow;
+            return data;
         }
 
         private static bool Validate(RatingDto data)
