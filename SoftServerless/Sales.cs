@@ -8,7 +8,7 @@ namespace SoftServerless
 {
     public static class Sales
     {
-        [FunctionName("Sales")]
+        // [FunctionName("Sales")]
         public static async Task Run([EventHubTrigger("sales", Connection = "SalesEventHub")]string[] myEventHubMessages, 
             [CosmosDB(
                 databaseName: "SoftServerless",
