@@ -29,5 +29,7 @@ namespace SoftServerless
         [DataMember(Name = "userNotes")]
         public string UserNotes { get; set; }
 
+        [DataMember(Name = "sentimentScore")]
+        public double? SentimentScore { get; set; }
     }
 }
